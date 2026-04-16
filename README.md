@@ -42,7 +42,7 @@ GrowthLens is an AI-powered analytics platform that automatically:
 ## 📦 Core Modules
 
 ### Phase 1 — MVP (Week 1)
-- [ ] Channel analytics dashboard (CAC, retention rate, LTV by channel)
+- [x] Channel analytics dashboard (retention rate, revenue by channel) — *Apr 16*
 - [ ] User lifecycle segmentation (New / Active / Silent / Churned)
 - [ ] Natural language query ("Which channel has the highest retention?")
 
@@ -79,17 +79,38 @@ Based on User Analytics Database System (Northeastern University, Team 6):
 
 ---
 
+## ⚠️ Known Limitations & Next Steps
+
+### Retention Rate
+- **Current:** Retention is calculated using `user.status = 'Active'` as a proxy
+- **Limitation:** This reflects account status, not actual behavioral retention
+- **Planned:** Redefine retention based on Session table — calculate 1-day, 7-day, and 30-day retention by checking whether a user has a session record N days after signup
+
+### CAC (Customer Acquisition Cost)
+- **Current:** Not yet implemented
+- **Limitation:** No ad spend data in the current schema
+- **Planned:** Add `ad_spend` field to Campaign table, then calculate CAC = ad_spend / new_users per channel
+
+### LTV (Lifetime Value)
+- **Current:** Not yet implemented
+- **Planned:** Calculate LTV per user based on Purchase + Payment tables, then aggregate by acquisition channel
+
+### User Lifecycle Segmentation
+- **Current:** Not yet implemented
+- **Planned:** Segment users into New / Active / Silent / Churned based on last session date and purchase history
+
+---
+
 ## 🚀 Getting Started
 
 ```bash
+# Database setup
+mysql -u root growthlens < database/schema.sql
+mysql -u root growthlens < database/seed.sql
+
 # Backend
 cd backend
 ./mvnw spring-boot:run
-
-# AI Layer
-cd ai
-pip install -r requirements.txt
-python agent.py
 
 # Frontend
 cd frontend
@@ -112,9 +133,17 @@ growthlens/
 
 ---
 
+## 📅 Dev Log
+
+| Date | What was built |
+|------|---------------|
+| Apr 16 | Project setup, MySQL schema, seed data, Spring Boot backend API, React dashboard with channel analytics |
+
+---
+
 ## 👤 Author
 
 Yulin Wang — Product Manager & Full-Stack Developer  
-[LinkedIn] | [GitHub]
+[LinkedIn](https://www.linkedin.com/in/yulin-wang-4b25b7311) | [GitHub](https://github.com/yulin620/growthlens)
 
 *Inspired by real growth challenges at Sohu.com and Summer App*
