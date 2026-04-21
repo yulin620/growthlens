@@ -1,28 +1,76 @@
-# GrowthLens 🔍
+# GrowthLens 🔍  
 **AI-Powered Growth Analytics Copilot**
 
-> Turn scattered user data into actionable retention and acquisition insights — in real time, without waiting for engineers.
+> Understand why users become inactive — and what to do about it.
 
 ---
 
 ## 🎯 Problem
 
-As a growth PM, I experienced these pain points firsthand:
-- Channel data scattered across Excel sheets, requiring manual consolidation
-- No real-time visibility into user behavior patterns
-- A/B test results hard to interpret and act on
-- Silent users churning without knowing why or how to re-engage them
+Growth teams often struggle with:
+
+- User data scattered across multiple sources (e.g., Excel, dashboards)
+- Limited visibility into user behavior after acquisition
+- Difficulty identifying why users stop engaging
+- Lack of actionable insights to improve retention
 
 ---
 
 ## 💡 Solution
 
-GrowthLens is an AI-powered analytics platform that automatically:
-1. Aggregates user acquisition, behavior, and payment data in one place
-2. Segments users by lifecycle stage (New / Active / At-Risk / Churned)
-3. Answers growth questions in natural language ("Which channel has the best 30-day retention?")
-4. Interprets A/B test results and recommends next actions
-5. Identifies why users go silent and generates personalized re-engagement strategies
+GrowthLens is an AI-powered analytics tool focused on one key problem:
+
+> **Identifying at-risk users and helping teams take action to improve retention.**
+
+The system combines user behavior data with lifecycle segmentation to:
+
+- Identify users who are likely to churn  
+- Diagnose potential reasons for inactivity  
+- Generate actionable re-engagement strategies  
+
+---
+
+## 🚀 Current MVP (v1)
+
+GrowthLens currently supports:
+
+- **Channel Analytics Dashboard**  
+  Analyze user acquisition performance, including retention and revenue by channel
+
+- **User Lifecycle Segmentation**  
+  Classify users into New / Active / At-Risk / Churned based on session activity
+
+- **At-Risk User Detection**  
+  Identify users who are likely to churn based on recent inactivity
+
+- **AI-Powered Recommendations**  
+  Generate simple re-engagement strategies using user behavior signals
+
+---
+
+## 🔥 Key Feature — At-Risk User Recovery
+
+GrowthLens goes beyond traditional dashboards by addressing a critical growth problem:
+
+> Users becoming inactive without clear reasons.
+
+The system introduces a simple pipeline:
+
+1. **Identify At-Risk Users**  
+   Based on recent session activity (inactive in last 7 days but active within 30 days)
+
+2. **Diagnose Behavior Patterns**  
+   Classify users into categories such as:
+   - Engagement Drop  
+   - No Conversion  
+   - One-Day User  
+
+3. **Generate AI-Powered Strategies**  
+   Use structured user signals to generate personalized re-engagement actions
+
+This enables teams to move from:
+
+> **Passive analytics → Proactive growth actions**
 
 ---
 
@@ -30,74 +78,47 @@ GrowthLens is an AI-powered analytics platform that automatically:
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React (Web Dashboard) |
-| Mobile | Flutter |
+| Frontend | React |
 | Backend | Spring Boot (Java) |
-| AI Layer | Python + Groq API (LLM Agent) |
 | Database | MySQL |
-| Deployment | AWS (Lambda + API Gateway) |
-
----
-
-## 📦 Core Modules
-
-### Phase 1 — MVP (Week 1)
-- [x] Channel analytics dashboard (retention rate, revenue by channel) — *Apr 16*
-- [ ] User lifecycle segmentation (New / Active / Silent / Churned)
-- [ ] Natural language query ("Which channel has the highest retention?")
-
-### Phase 2 (Week 2-3)
-- [ ] A/B test result interpreter
-- [ ] Silent user analysis + re-engagement strategy generator
-- [ ] AI Agent workflow (auto-generate full growth analysis report)
-
-### Phase 3 (Week 4)
-- [ ] Flutter mobile app
-- [ ] Real-time data simulation
-- [ ] Export report as PDF
+| AI Layer | Python (LLM API integration) |
 
 ---
 
 ## 🗄️ Database Schema
 
-Based on User Analytics Database System (Northeastern University, Team 6):
-- **User** — who the user is
-- **AcquisitionChannel + Campaign + UserAcquisition** — where they came from
-- **Session + Event + EventType** — what they do
-- **Purchase + Payment + ProductOrPlan** — what they buy
-- **Report + ReportMetric** — analytics output
+The system integrates multiple aspects of user data:
 
----
-
-## 🤖 AI Components
-
-| Component | Source | Purpose |
-|-----------|--------|---------|
-| LLM Agent | Assignment 5 | Orchestrates full analysis workflow |
-| Natural Language Query | Assignment 3 | Translate user questions to SQL insights |
-| Growth Strategy Generator | Assignment 4 (DPO) | Generate high-quality re-engagement recommendations |
+- **User** — basic user information  
+- **UserAcquisition / Channel / Campaign** — acquisition source  
+- **Session** — user activity tracking  
+- **Purchase / Payment** — monetization data  
 
 ---
 
 ## ⚠️ Known Limitations & Next Steps
 
-### Retention Rate
-- **Current:** Retention is calculated using `user.status = 'Active'` as a proxy
-- **Limitation:** This reflects account status, not actual behavioral retention
-- **Planned:** Redefine retention based on Session table — calculate 1-day, 7-day, and 30-day retention by checking whether a user has a session record N days after signup
+### Retention Calculation
+- **Current:** Uses user status as a proxy for activity  
+- **Planned:** Implement cohort-based retention (Day 1 / Day 7 / Day 30) using session data  
 
-### CAC (Customer Acquisition Cost)
-- **Current:** Not yet implemented
-- **Limitation:** No ad spend data in the current schema
-- **Planned:** Add `ad_spend` field to Campaign table, then calculate CAC = ad_spend / new_users per channel
+### User Segmentation
+- **Current:** Basic rule-based segmentation  
+- **Planned:** Refine segmentation using more behavioral signals  
 
-### LTV (Lifetime Value)
-- **Current:** Not yet implemented
-- **Planned:** Calculate LTV per user based on Purchase + Payment tables, then aggregate by acquisition channel
+### Monetization Analysis
+- **Planned:** Add LTV, CAC, and high-value user identification  
 
-### User Lifecycle Segmentation
-- **Current:** Not yet implemented
-- **Planned:** Segment users into New / Active / Silent / Churned based on last session date and purchase history
+---
+
+## 🔮 Roadmap
+
+Future improvements include:
+
+- Cohort-based retention analysis  
+- High-value user segmentation  
+- Revenue-risk alert system  
+- A/B test analysis and recommendation  
 
 ---
 
