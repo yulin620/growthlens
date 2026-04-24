@@ -17,4 +17,4 @@ spring:
 
 groq:
   api:
-    key: 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
+    key: ${GROQ_API_KEY}
