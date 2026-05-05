@@ -97,8 +97,8 @@ Based on User Analytics Database System (Northeastern University, Team 6):
 - **Planned:** Calculate LTV per user based on Purchase + Payment tables, then aggregate by acquisition channel
 
 ### User Lifecycle Segmentation
-- **Current:** Not yet implemented
-- **Planned:** Segment users into New / Active / Silent / Churned based on last session date and purchase history
+- **Current:** ✅ Implemented — users are segmented into New / Active / At-Risk / Churned based on session activity
+- **Planned:** Improve with cohort-based retention analysis
 
 ---
 
@@ -109,8 +109,17 @@ Based on User Analytics Database System (Northeastern University, Team 6):
 mysql -u root growthlens < database/schema.sql
 mysql -u root growthlens < database/seed.sql
 
-# Backend
-cd backend
+### Prerequisites
+- Java 17+
+- Maven
+- MySQL 8+
+- Node.js 18+
+- Groq API key
+
+### 2. Configure environment variables
+export GROQ_API_KEY=your_groq_api_key_here
+
+### 3. Backend
 ./mvnw spring-boot:run
 
 # Frontend
