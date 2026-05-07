@@ -13,6 +13,7 @@ function App() {
   const [channels, setChannels] = useState([]);
   const [lifecycle, setLifecycle] = useState([]);
   const [atRisk, setAtRisk] = useState([]);
+  const [ltv, setLtv] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useState({});
   const [loadingRec, setLoadingRec] = useState({});
@@ -22,10 +23,12 @@ function App() {
       axios.get(`${API}/channels`),
       axios.get(`${API}/users/lifecycle`),
       axios.get(`${API}/users/at-risk`),
-    ]).then(([ch, lc, ar]) => {
+      axios.get(`${API}/ltv/channels`),
+    ]).then(([ch, lc, ar, lv]) => {
       setChannels(ch.data);
       setLifecycle(lc.data);
       setAtRisk(ar.data);
+      setLtv(lv.data);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -40,7 +43,6 @@ function App() {
       .catch(() => setLoadingRec(prev => ({ ...prev, [userId]: false })));
   };
 
-  // segment counts for pie chart
   const segmentCounts = ['New', 'Active', 'At-Risk', 'Churned'].map(seg => ({
     name: seg,
     value: lifecycle.filter(u => u.lifecycleSegment === seg).length
@@ -51,19 +53,14 @@ function App() {
 
   return (
     <div className="app">
-      {/* Header */}
       <header className="header">
         <div className="header-left">
           <h1>🔍 GrowthLens</h1>
           <p>AI-Powered Growth Analytics Copilot</p>
         </div>
         <nav className="nav">
-          <button className={page === 'dashboard' ? 'active' : ''} onClick={() => setPage('dashboard')}>
-            Dashboard
-          </button>
-          <button className={page === 'lifecycle' ? 'active' : ''} onClick={() => setPage('lifecycle')}>
-            Lifecycle
-          </button>
+          <button className={page === 'dashboard' ? 'active' : ''} onClick={() => setPage('dashboard')}>Dashboard</button>
+          <button className={page === 'lifecycle' ? 'active' : ''} onClick={() => setPage('lifecycle')}>Lifecycle</button>
           <button className={page === 'atrisk' ? 'active' : ''} onClick={() => setPage('atrisk')}>
             At-Risk Users {atRisk.length > 0 && <span className="badge-count">{atRisk.length}</span>}
           </button>
@@ -122,6 +119,20 @@ function App() {
             </ResponsiveContainer>
           </div>
 
+          <div className="chart-container">
+            <h2>Average LTV by Acquisition Channel</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={ltv} margin={{ top: 10, right: 30, left: 0, bottom: 60 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="channelName" angle={-30} textAnchor="end" interval={0} />
+                <YAxis />
+                <Tooltip formatter={(v) => `$${parseFloat(v).toFixed(2)}`} />
+                <Legend verticalAlign="top" />
+                <Bar dataKey="avgLTV" name="Avg LTV ($)" fill="#f59e0b" radius={[4,4,0,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
           <div className="table-container">
             <h2>Channel Performance Details</h2>
             <table>
@@ -132,24 +143,29 @@ function App() {
                   <th>Active Users</th>
                   <th>Purchases</th>
                   <th>Revenue</th>
+                  <th>Avg LTV</th>
                   <th>Retention Rate</th>
                 </tr>
               </thead>
               <tbody>
-                {channels.map((c, i) => (
-                  <tr key={i}>
-                    <td>{c.channelName}</td>
-                    <td>{c.totalUsers}</td>
-                    <td>{c.activeUsers}</td>
-                    <td>{c.totalPurchases}</td>
-                    <td>${parseFloat(c.totalRevenue).toFixed(2)}</td>
-                    <td>
-                      <span className={`badge ${c.retentionRatePct >= 70 ? 'good' : c.retentionRatePct >= 40 ? 'medium' : 'bad'}`}>
-                        {parseFloat(c.retentionRatePct).toFixed(1)}%
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {channels.map((c, i) => {
+                  const ltvData = ltv.find(l => l.channelName === c.channelName);
+                  return (
+                    <tr key={i}>
+                      <td>{c.channelName}</td>
+                      <td>{c.totalUsers}</td>
+                      <td>{c.activeUsers}</td>
+                      <td>{c.totalPurchases}</td>
+                      <td>${parseFloat(c.totalRevenue).toFixed(2)}</td>
+                      <td>${ltvData ? parseFloat(ltvData.avgLTV).toFixed(2) : '—'}</td>
+                      <td>
+                        <span className={`badge ${c.retentionRatePct >= 70 ? 'good' : c.retentionRatePct >= 40 ? 'medium' : 'bad'}`}>
+                          {parseFloat(c.retentionRatePct).toFixed(1)}%
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
