@@ -93,8 +93,7 @@ Based on User Analytics Database System (Northeastern University, Team 6):
 - **Planned:** Add `ad_spend` field to Campaign table, then calculate CAC = ad_spend / new_users per channel
 
 ### LTV (Lifetime Value)
-- **Current:** Not yet implemented
-- **Planned:** Calculate LTV per user based on Purchase + Payment tables, then aggregate by acquisition channel
+- **Current:** ✅ Implemented — avg LTV calculated per acquisition channel based on successful payments
 
 ### User Lifecycle Segmentation
 - **Current:** ✅ Implemented — users are segmented into New / Active / At-Risk / Churned based on session activity
@@ -149,6 +148,7 @@ growthlens/
 |------|---------------|
 | Apr 16 | Project setup, MySQL schema, seed data, Spring Boot backend API, React dashboard with channel analytics |
 | Apr 23 | User lifecycle segmentation (New/Active/At-Risk/Churned), At-Risk user detection, AI re-engagement suggestions via Groq API, React frontend with 3 pages |
+| May 7 | LTV calculation by acquisition channel, updated Dashboard with LTV chart |
 
 ---
 
