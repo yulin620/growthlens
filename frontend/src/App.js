@@ -18,6 +18,11 @@ function App() {
   const [recommendations, setRecommendations] = useState({});
   const [loadingRec, setLoadingRec] = useState({});
 
+  // Ask AI state
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [loadingAnswer, setLoadingAnswer] = useState(false);
+
   useEffect(() => {
     Promise.all([
       axios.get(`${API}/channels`),
@@ -43,11 +48,34 @@ function App() {
       .catch(() => setLoadingRec(prev => ({ ...prev, [userId]: false })));
   };
 
+  const askAgent = () => {
+    if (!question.trim()) return;
+    setLoadingAnswer(true);
+    setAnswer('');
+    axios.post(`${API}/agent/query`, { question })
+      .then(res => {
+        setAnswer(res.data.answer);
+        setLoadingAnswer(false);
+      })
+      .catch(() => {
+        setAnswer('Unable to get answer. Please try again.');
+        setLoadingAnswer(false);
+      });
+  };
+
   const segmentCounts = ['New', 'Active', 'At-Risk', 'Churned'].map(seg => ({
     name: seg,
     value: lifecycle.filter(u => u.lifecycleSegment === seg).length
   }));
   const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444'];
+
+  const SAMPLE_QUESTIONS = [
+    'Which channel has the best ROI?',
+    'Why are users churning?',
+    'How can I improve retention?',
+    'Which channel should I invest more in?',
+    'What is the biggest growth opportunity?',
+  ];
 
   if (loading) return <div className="loading">Loading GrowthLens...</div>;
 
@@ -62,8 +90,9 @@ function App() {
           <button className={page === 'dashboard' ? 'active' : ''} onClick={() => setPage('dashboard')}>Dashboard</button>
           <button className={page === 'lifecycle' ? 'active' : ''} onClick={() => setPage('lifecycle')}>Lifecycle</button>
           <button className={page === 'atrisk' ? 'active' : ''} onClick={() => setPage('atrisk')}>
-            At-Risk Users {atRisk.length > 0 && <span className="badge-count">{atRisk.length}</span>}
+            At-Risk {atRisk.length > 0 && <span className="badge-count">{atRisk.length}</span>}
           </button>
+          <button className={page === 'ask' ? 'active' : ''} onClick={() => setPage('ask')}>✨ Ask AI</button>
         </nav>
       </header>
 
@@ -286,6 +315,58 @@ function App() {
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {/* Ask AI Page */}
+      {page === 'ask' && (
+        <div>
+          <div className="section-header">
+            <h2>✨ Ask AI</h2>
+            <p>Ask any question about your growth data and get instant AI-powered insights.</p>
+          </div>
+
+          <div className="ask-container">
+            <div className="ask-input-row">
+              <input
+                className="ask-input"
+                type="text"
+                placeholder="e.g. Which channel has the best ROI?"
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && askAgent()}
+              />
+              <button className="btn-ai" onClick={askAgent} disabled={loadingAnswer}>
+                {loadingAnswer ? 'Thinking...' : 'Ask →'}
+              </button>
+            </div>
+
+            <div className="sample-questions">
+              <p className="sample-label">Try asking:</p>
+              <div className="sample-list">
+                {SAMPLE_QUESTIONS.map((q, i) => (
+                  <button key={i} className="sample-btn" onClick={() => setQuestion(q)}>
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {loadingAnswer && (
+              <div className="answer-loading">🤔 Analyzing your data...</div>
+            )}
+
+            {answer && (
+              <div className="answer-container">
+                <div className="answer-title">💡 AI Insight</div>
+                <div className="answer-text">
+                  {answer.split('\n').map((line, i) => (
+                    line.trim() && <p key={i}>{line}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
