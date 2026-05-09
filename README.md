@@ -149,6 +149,7 @@ growthlens/
 | Apr 16 | Project setup, MySQL schema, seed data, Spring Boot backend API, React dashboard with channel analytics |
 | Apr 23 | User lifecycle segmentation (New/Active/At-Risk/Churned), At-Risk user detection, AI re-engagement suggestions via Groq API, React frontend with 3 pages |
 | May 7 | LTV calculation by acquisition channel, updated Dashboard with LTV chart |
+| May 9 | AI Agent workflow, Ask AI page with natural language queries |
 
 ---
 
