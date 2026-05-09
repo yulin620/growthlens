@@ -61,7 +61,7 @@ GrowthLens is an AI-powered analytics platform that automatically:
 
 ## 🗄️ Database Schema
 
-Based on User Analytics Database System (Northeastern University, Team 6):
+Based on User Analytics Database System:
 - **User** — who the user is
 - **AcquisitionChannel + Campaign + UserAcquisition** — where they came from
 - **Session + Event + EventType** — what they do
